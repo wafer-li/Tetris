@@ -46,7 +46,6 @@ namespace MyTetris
             }
             catch
             {
-                Stop();
             }
         }
         public static void Stop()

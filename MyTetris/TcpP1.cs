@@ -44,7 +44,6 @@ namespace MyTetris
             }
             catch
             {
-                Stop();
             }
         }
 
@@ -83,7 +82,7 @@ namespace MyTetris
 
         public static string getMessage()
         {
-            return Reader.ReadString();
+           return Reader.ReadString();
         }
 
     }

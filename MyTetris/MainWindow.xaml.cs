@@ -82,6 +82,7 @@ namespace MyTetris
 
         public void PlayerOne_GameStart()
         {
+            TcpP1.Start();
             disTimerPlayerOne.Start();
         }
 
@@ -137,6 +138,7 @@ namespace MyTetris
         private void PlayerTwoGame_GameStart()
         {
             //MessageBox.Show("hello player two");
+            TcpP2.Start();
             disTimerPlayerTwo.Start();
         }
         void disTwoTimer_Tick(object sender, EventArgs e)
