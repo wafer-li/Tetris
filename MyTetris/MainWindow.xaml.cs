@@ -22,13 +22,11 @@ namespace MyTetris
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region Variable
         private GameMgr m_objPlayerOneGameMgr;
         private GameMgr m_objPlayerTwoGameMgr;
+        private bool singleUser;
         private DispatcherTimer disTimerPlayerOne;
         private DispatcherTimer disTimerPlayerTwo;
-        #endregion
-        #region Properties
         public GameMgr PlayerOneGameMgr
         {
             get { return m_objPlayerOneGameMgr; }
@@ -47,7 +45,6 @@ namespace MyTetris
                     m_objPlayerTwoGameMgr = value;
             }
         }
-        #endregion
         public MainWindow()
         {
             InitializeComponent();
@@ -82,7 +79,10 @@ namespace MyTetris
 
         public void PlayerOne_GameStart()
         {
-            TcpP1.Start();
+            if (!singleUser)
+            {
+                TcpP1.Start();
+            }
             disTimerPlayerOne.Start();
         }
 
@@ -137,7 +137,10 @@ namespace MyTetris
         }
         private void PlayerTwoGame_GameStart()
         {
-            //MessageBox.Show("hello player two");
+            if (!singleUser)
+            {
+                TcpP1.Start();
+            }
             TcpP2.Start();
             disTimerPlayerTwo.Start();
         }
