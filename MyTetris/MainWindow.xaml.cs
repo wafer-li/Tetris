@@ -24,7 +24,7 @@ namespace MyTetris
     {
         private GameMgr m_objPlayerOneGameMgr;
         private GameMgr m_objPlayerTwoGameMgr;
-        private bool singleUser;
+        private bool singleUser = true;
         private DispatcherTimer disTimerPlayerOne;
         private DispatcherTimer disTimerPlayerTwo;
         public GameMgr PlayerOneGameMgr
