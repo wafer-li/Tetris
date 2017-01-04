@@ -64,15 +64,22 @@ namespace MyTetris
             PlayerOneGameMgr = new GameMgr(gridPlayerOne);
             PlayerOneGameMgr.GameOver += PlayerOne_GameOver;
             PlayerOneGameMgr.GameStart += PlayerOne_GameStart;
+            PlayerOneGameMgr.ScoreChanged += PlayerOne_ScoreChanged;
 
             //Player Two
             PlayerTwoGameMgr = new GameMgr(gridPlayerTwo);
             PlayerTwoGameMgr.GameStart += PlayerTwoGame_GameStart;
             PlayerTwoGameMgr.GameOver += PlayerTwoGameMgr_GameOver;
+            PlayerTwoGameMgr.ScoreChanged += PlayerTwo_ScoreChanged;
 
         }
 
         #region Player One
+        public void PlayerOne_ScoreChanged(int score)
+        {
+            scorePlayerOne.Content = "Score: " + score;
+        }
+
         public void PlayerOne_GameStart()
         {
             disTimerPlayerOne.Start();
@@ -83,8 +90,8 @@ namespace MyTetris
             disTimerPlayerOne.Stop();
             disTimerPlayerOne.Tick -= disOneTimer_Tick;
 
-            MessageBox.Show("Player One Game Over");
-
+            MessageBox.Show("Player One Game Over\nFinal Score: " + PlayerOneGameMgr.Score);
+            PlayerOneGameMgr.Score = 0;
         }
         private void disOneTimer_Tick(object sender, EventArgs e)
         {
@@ -94,6 +101,8 @@ namespace MyTetris
             }
             else
             {
+                // stop here to detect all lines
+                m_objPlayerOneGameMgr.TryToCleanRows();
                 m_objPlayerOneGameMgr.NewBlock();
             }
         }
@@ -113,11 +122,17 @@ namespace MyTetris
         #endregion
 
         #region PLayer Two
+        public void PlayerTwo_ScoreChanged(int score)
+        {
+            scorePlayerTwo.Content = "Score: " + score;
+        }
+
         void PlayerTwoGameMgr_GameOver()
         {
-            MessageBox.Show("Player Two Game Over");
             disTimerPlayerTwo.Stop();
             disTimerPlayerTwo.Tick -= disTwoTimer_Tick;
+            MessageBox.Show("Player Two Game Over\nFinal Score: " + PlayerTwoGameMgr.Score);
+            PlayerTwoGameMgr.Score = 0;
         }
         private void PlayerTwoGame_GameStart()
         {

@@ -17,12 +17,14 @@ namespace MyTetris
     /// </summary>
     /// 
     public delegate void GameEvent();
+    public delegate void ScoreChangedEvent(int score);
 
     public class GameMgr : BindableBase
     {
         #region Event
         public event GameEvent GameOver;
         public event GameEvent GameStart;
+        public event ScoreChangedEvent ScoreChanged;
         #endregion
 
         #region Instance variable
@@ -62,6 +64,16 @@ namespace MyTetris
         }
 
         public Block CurrentBlock { get; set; }
+
+        public int Score
+        {
+            get { return m_score; }
+            set
+            {
+                ScoreChanged(value);
+                m_score = value;
+            }
+        }
 
         #endregion
 
@@ -290,7 +302,7 @@ namespace MyTetris
                         //PaintPart(p);
                         Debug.Assert(prevY + 1 == p.PosY);
                     }
-                    m_score += 100; // one line generates 100 points.
+                    Score += 100; // one line generates 100 points.
                     Debug.WriteLine("The score is "+m_score+" now!");
                 }
             }
