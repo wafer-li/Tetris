@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace MyTetris
 {
@@ -34,6 +35,7 @@ namespace MyTetris
         /// </summary>
         private Block m_NextBlock;
         private List<Part> m_parentGrid;
+        private int m_score = 0;
         #endregion
 
         #region Properties
@@ -140,14 +142,20 @@ namespace MyTetris
             {
                 foreach (Part p in CurrentBlock.Parts)
                 {
-                    var uiPart = GamePanel.Children.Cast<Control>().Where(e => Grid.GetRow(e) == p.PosY && Grid.GetColumn(e) == p.PosX).Single();
-                    uiPart.Background = new SolidColorBrush(p.ParentBlock.Color);
+                    PaintPart(p);
                 }
             }
             catch(Exception)
             {
             }
         }
+
+        public void PaintPart(Part p)
+        {
+            var uiPart = GamePanel.Children.Cast<Control>().Where(e => Grid.GetRow(e) == p.PosY && Grid.GetColumn(e) == p.PosX).Single();
+            uiPart.Background = new SolidColorBrush(p.ParentBlock.Color);
+        }
+
         /// <summary>
         /// Remove Block from panel
         /// </summary>
@@ -157,14 +165,23 @@ namespace MyTetris
             {
                 foreach (Part p in CurrentBlock.Parts)
                 {
-                    var uiPart = GamePanel.Children.Cast<Control>().Where(e => Grid.GetRow(e) == p.PosY && Grid.GetColumn(e) == p.PosX).Single();
-                    uiPart.Background = new SolidColorBrush(Colors.Transparent);
+                    RemovePart(p);
                 }
             }
             catch(Exception)
             {
             }
         }
+
+        /// <summary>
+        /// Remove a Part from panel
+        /// </summary>
+        public void RemovePart(Part p)
+        {
+            var uiPart = GamePanel.Children.Cast<Control>().Where(e => Grid.GetRow(e) == p.PosY && Grid.GetColumn(e) == p.PosX).Single();
+            uiPart.Background = new SolidColorBrush(Colors.Transparent);
+        }
+
         public void MoveBlockDown()
         {
             if (!CurrentBlock.Locked)
@@ -242,6 +259,47 @@ namespace MyTetris
         }
         #endregion
 
+        public void TryToCleanRows()
+        {
+            // iterate over rows and calculate new grid positions
+            // query each row from top to bottom
+            m_parentGrid.ForEach(p => RemovePart(p));
+            for (int i = 0; i < 20; i++)
+            {
+                var partsInARow = m_parentGrid.Where(p => p.PosY == i);
+                // if all columns of a row are filled (12 parts in a row), this row should be cleared
+                if (partsInARow.Count() == 12)
+                {
+                    var tmp_partsInARow = new List<Part>(partsInARow);
+                    // remove part from the block, both from Grid, block and screen
+                    foreach (var p in tmp_partsInARow)
+                    {
+                        var prevCount = p.ParentBlock.Parts.Count();
+                        //RemovePart(p);
+                        p.ParentBlock.Parts.Remove(p);
+                        m_parentGrid.Remove(p);
+                        
+                        Debug.Assert(prevCount != p.ParentBlock.Parts.Count());
+                    }
+                    // move all block up down for 1 grid, both from Grid and screen
+                    foreach (var p in m_parentGrid.Where(p => p.PosY < i))
+                    {
+                        var prevY = p.PosY;
+                        //RemovePart(p);
+                        p.MoveDown();
+                        //PaintPart(p);
+                        Debug.Assert(prevY + 1 == p.PosY);
+                    }
+                    m_score += 100; // one line generates 100 points.
+                    Debug.WriteLine("The score is "+m_score+" now!");
+                }
+            }
 
+            m_parentGrid.ForEach(p => PaintPart(p));
+            foreach (var p in m_parentGrid)
+            {
+                Debug.Assert(m_parentGrid.Where(q => q.PosX == p.PosX && q.PosY == p.PosY).Count() == 1);
+            }
+        }
     }
 }

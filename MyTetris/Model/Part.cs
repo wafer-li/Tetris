@@ -15,6 +15,8 @@ namespace MyTetris.Model
         #region Fields
         private int m_posx;
         private int m_posy;
+        //private int r_posx;
+        //private int r_posy;
         private Block m_parentBlock;
         #endregion
 
@@ -28,12 +30,15 @@ namespace MyTetris.Model
         public int PosX
         {
             get { return ParentBlock.PosX + m_posx; }
+            //get { return r_posx; }
         }
 
         public int PosY
         {
             get { return ParentBlock.PosY + m_posy; }
+            //get { return r_posy; }
         }
+
         #endregion
 
         #region Contructors
@@ -42,6 +47,8 @@ namespace MyTetris.Model
             m_parentBlock = parentBlock;
             m_posx = posx;
             m_posy = posy;
+            //r_posx = parentBlock.PosX + posx;
+            //r_posy = parentBlock.PosY + posy;
         }
         #endregion
 
@@ -81,6 +88,15 @@ namespace MyTetris.Model
             //Set the new part position
             m_posx = x;
             m_posy = y;
+        }
+
+        /// Move down a grid (on clear)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void MoveDown()
+        {
+            m_posy += 1;
         }
         #endregion
     }

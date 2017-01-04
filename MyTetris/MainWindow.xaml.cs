@@ -134,6 +134,8 @@ namespace MyTetris
             }
             else
             {
+                // stop here to detect all lines
+                m_objPlayerTwoGameMgr.TryToCleanRows();
                 m_objPlayerTwoGameMgr.NewBlock();
                 //dispatcherTimer.Stop();
             }
@@ -226,11 +228,11 @@ namespace MyTetris
                     m_objPlayerOneGameMgr.DoRightMoving();
                     //DoRightMoving(objGameMgr);
                     break;
-                case Key.X:
+                case Key.S:
                     m_objPlayerOneGameMgr.DoDownMoving();
                     //DoDownMoving(objGameMgr);
                     break;
-                case Key.Z:
+                case Key.W:
                     m_objPlayerOneGameMgr.Rotation();
                     break;
                 default:

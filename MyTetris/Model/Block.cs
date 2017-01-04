@@ -69,7 +69,7 @@ namespace MyTetris.Model
             //The start location has to be x4 y1 for the center of every block (which is 1,1)
             PosX = 4;
             PosY = -1;
-
+       
             Grid = grid;
         }
         #endregion
